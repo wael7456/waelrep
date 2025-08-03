@@ -1,0 +1,271 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+
+    
+
+{% block body %}
+<style>
+        .profile-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        
+        .profile-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 1rem 1rem 0 0;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-avatar i {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-floating .form-control {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1rem 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(248, 250, 252, 0.8);
+        }
+        
+        .form-floating .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background: white;
+        }
+        
+        .form-floating label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+            background: linear-gradient(135deg, #4338ca, #6d28d9);
+        }
+        
+        .btn-primary-custom:active {
+            transform: translateY(0);
+        }
+        
+        .alert-success-custom {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            animation: slideInDown 0.5s ease-out;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-errors {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .profile-body {
+            padding: 2.5rem;
+        }
+        
+        .security-note {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d1d5db, transparent);
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 1rem;
+            }
+            
+            .profile-body {
+                padding: 1.5rem;
+            }
+            
+            .profile-header {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+<div class="profile-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="profile-card rounded-4">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <h2 class="mb-0 fw-bold">Mon Profil</h2>
+                        <p class="mb-0 opacity-75">Gérez vos informations personnelles</p>
+                    </div>
+
+                    <div class="profile-body">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success-custom d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        <div class="security-note">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Vos informations sont sécurisées et chiffrées</span>
+                        </div>
+
+                        {{ form_start(form) }}
+
+                            <div class="form-floating">
+                                {{ form_widget(form.email, { 
+                                    'attr': {
+                                        'class': 'form-control', 
+                                        'placeholder': 'Votre adresse email',
+                                        'id': 'email'
+                                    } 
+                                }) }}
+                                <label for="email">
+                                    <i class="bi bi-envelope me-2"></i>Adresse Email
+                                </label>
+                                {% if form_errors(form.email) %}
+                                    <div class="form-errors">
+                                        {{ form_errors(form.email) }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="form-floating">
+                                {{ form_widget(form.plainPassword, { 
+                                    'attr': {
+                                        'class': 'form-control', 
+                                        'placeholder': 'Nouveau mot de passe',
+                                        'id': 'plainPassword'
+                                    } 
+                                }) }}
+                                <label for="plainPassword">
+                                    <i class="bi bi-lock me-2"></i>Nouveau mot de passe
+                                </label>
+                                {% if form_errors(form.plainPassword) %}
+                                    <div class="form-errors">
+                                        {{ form_errors(form.plainPassword) }}
+                                    </div>
+                                {% endif %}
+                                <small class="text-muted mt-1 d-block">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Laisser vide pour conserver le mot de passe actuel
+                                </small>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary-custom">
+                                    <i class="bi bi-save me-2"></i>
+                                    Enregistrer les modifications
+                                </button>
+                            </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

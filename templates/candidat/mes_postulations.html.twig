@@ -1,0 +1,210 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="postulations-page">
+<link rel="stylesheet" href="{{ asset('css/mespoststyle.css') }}">
+
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="bi bi-file-earmark-check-fill"></i>
+            </div>
+            <h1 class="page-title">Mes Candidatures</h1>
+            <p class="page-subtitle">Suivez l'évolution de vos candidatures en temps réel</p>
+        </div>
+        <div class="header-stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ postulations|length }}</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    {% set acceptees = postulations|filter(p => p.statut|lower == 'traité')|length %}
+                    {{ acceptees }}
+                </div>
+                <div class="stat-label">traité</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    {% set enAttente = postulations|filter(p => p.statut|lower == 'en attente')|length %}
+                    {{ enAttente }}
+                </div>
+                <div class="stat-label">En attente</div>
+            </div>
+        </div>
+    </div>
+
+    {% if postulations|length > 0 %}
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="bi bi-grid-fill me-2"></i>Toutes
+                </button>
+                <button class="filter-btn" data-filter="traité">
+                    <i class="bi bi-check-circle-fill me-2"></i>Traité
+                </button>
+                <button class="filter-btn" data-filter="en attente">
+                    <i class="bi bi-clock-fill me-2"></i>En attente
+                </button>
+                <button class="filter-btn" data-filter="refusé">
+                    <i class="bi bi-x-circle-fill me-2"></i>Refusées
+                </button>
+            </div>
+        </div>
+
+        <!-- Postulations Grid -->
+        <div class="postulations-grid">
+            {% for postulation in postulations %}
+                <div class="postulation-card" data-status="{{ postulation.statut|lower }}">
+                    <div class="card-header">
+                        <div class="job-title">
+                            <i class="bi bi-briefcase-fill me-2"></i>
+                            {{ postulation.offre.titre }}
+                        </div>
+                        <div class="status-badge status-{{ postulation.statut|lower|replace({' ': '-'}) }}">
+                            {% set statut = postulation.statut|lower %}
+                            {% if statut == 'traité' %}
+                                <i class="bi bi-check-circle-fill me-1"></i>traité
+                            {% elseif statut == 'refusé' %}
+                                <i class="bi bi-x-circle-fill me-1"></i>Refusé
+                            {% elseif statut == 'en attente' %}
+                                <i class="bi bi-clock-fill me-1"></i>En attente
+                            {% else %}
+                                <i class="bi bi-question-circle-fill me-1"></i>{{ postulation.statut }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="job-info">
+                            <div class="info-item">
+                                <i class="bi bi-building"></i>
+                                <span>Medicacom</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>{{ postulation.offre.lieu ?? 'Non spécifié' }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>{{ postulation.datePostulation|date('d M Y') }}</span>
+                            </div>
+                        </div>
+                        
+                        {% if postulation.offre.description %}
+                            <div class="job-description">
+                                {{ postulation.offre.description|slice(0, 120) }}...
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-actions">
+                            <button class="btn-action btn-view" data-bs-toggle="modal" data-bs-target="#detailModal{{ postulation.id }}">
+                                <i class="bi bi-eye-fill me-1"></i>Détails
+                            </button>
+                            {% if postulation.statut|lower == 'en attente' %}
+                                <button class="btn-action btn-cancel" onclick="cancelApplication({{ postulation.id }})">
+                                    <i class="bi bi-trash-fill me-1"></i>Annuler
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-timeline">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-text">
+                            Candidature envoyée le {{ postulation.datePostulation|date('d/m/Y à H:i') }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal détails -->
+                <div class="modal fade" id="detailModal{{ postulation.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ postulation.offre.titre }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-info">
+                                    <div class="info-row">
+                                        <strong>Statut:</strong>
+                                        <span class="status-badge status-{{ postulation.statut|lower|replace({' ': '-'}) }}">
+                                            {{ postulation.statut }}
+                                        </span>
+                                    </div>
+                                    <div class="info-row">
+                                        <strong>Date de candidature:</strong>
+                                        <span>{{ postulation.datePostulation|date('d F Y à H:i') }}</span>
+                                    </div>
+                                    {% if postulation.offre.description %}
+                                        <div class="info-row">
+                                            <strong>Description du poste:</strong>
+                                            <p>{{ postulation.offre.description }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-inbox"></i>
+            </div>
+            <h3 class="empty-title">Aucune candidature trouvée</h3>
+            <p class="empty-text">Vous n'avez pas encore postulé à des offres d'emploi.</p>
+            <a href="{{ path('candidat_dashboard') }}" class="btn-primary-action">
+                <i class="bi bi-search me-2"></i>Découvrir les offres
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filtrage des candidatures
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const postulationCards = document.querySelectorAll('.postulation-card');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Mise à jour des boutons actifs
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.dataset.filter;
+            
+            // Filtrage des cartes
+            postulationCards.forEach(card => {
+                const status = card.dataset.status;
+                
+                if (filter === 'all' || status === filter) {
+                    card.classList.remove('hidden');
+                    card.classList.add('show');
+                } else {
+                    card.classList.add('hidden');
+                    card.classList.remove('show');
+                }
+            });
+        });
+    });
+});
+
+function cancelApplication(postulationId) {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette candidature ?')) {
+        // Ici vous pouvez ajouter la logique pour annuler la candidature
+        // Par exemple, faire un appel AJAX vers votre contrôleur
+        console.log('Annulation de la candidature ' + postulationId);
+    }
+}
+</script>
+{% endblock %}

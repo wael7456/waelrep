@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Candidat - Opportunités de Carrière{% endblock %}
+
+{% block body %}
+
+
+<div class="main-container">
+<link rel="stylesheet" href="{{ asset('css/indexstyle.css') }}">
+
+    <!-- Hero Header -->
+    <div class="hero-header">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">💼 Opportunités de Carrière</h1>
+                <p class="hero-subtitle">Découvrez votre prochain défi professionnel parmi nos offres sélectionnées</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Search Section -->
+        <div class="search-section">
+            <form method="get" action="{{ path('candidat_dashboard') }}">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ q }}" 
+                        class="search-input" 
+                        placeholder="Rechercher par titre, compétences..."
+                    >
+                    <button type="submit" class="search-btn">
+                        ➤ Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Stats Section -->
+        {% if offres|length > 0 %}
+        <div class="stats-section">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ offres|length }}</span>
+                        <div class="stat-label">Offres disponibles</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ offres|length > 10 ? '10+' : offres|length }}</span>
+                        <div class="stat-label">Entreprises partenaires</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item">
+                        <span class="stat-number">95%</span>
+                        <div class="stat-label">Taux de satisfaction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Offers Grid -->
+        {% if offres|length > 0 %}
+            <div class="offers-grid">
+                {% for offre in offres %}
+                    <div class="offer-card">
+                        <div class="offer-card-body">
+                            <h2 class="offer-title">
+                                <a href="{{ path('candidat_offre_detail', {'id': offre.id}) }}">
+                                    {{ offre.titre }}
+                                </a>
+                            </h2>
+                            
+                            <p class="offer-description">
+                                {{ offre.description|length > 150 ? offre.description|slice(0, 150) ~ '...' : offre.description }}
+                            </p>
+                            
+                            <div class="offer-meta">
+                                <div class="deadline-info">
+                                    <span class="deadline-icon"></span>
+                                    <span>Candidature avant le {{ offre.dateLimite|date('d M Y') }}</span>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ path('candidat_postuler', {'id': offre.id}) }}" class="apply-btn">
+                                🚀 Postuler maintenant
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-offers">
+                <div class="no-offers-icon">🎯</div>
+                <h3 class="no-offers-title">Aucune offre ne correspond à votre recherche</h3>
+                <p class="no-offers-text">
+                    Modifiez vos critères de recherche ou revenez plus tard pour découvrir de nouvelles opportunités.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animation d'apparition progressive des cartes
+    const cards = document.querySelectorAll('.offer-card');
+    
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+    
+    // Animation du champ de recherche
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+    }
+});
+</script>
+{% endblock %}

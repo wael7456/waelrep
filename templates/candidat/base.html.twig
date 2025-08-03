@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Espace Candidat{% endblock %}</title>
+    
+</head>
+<body>
+    <nav>
+        <a href="{{ path('candidat_dashboard') }}">Offres</a> |
+        <a href="{{ path('candidat_mes_postulations') }}">Mes postulations</a> |
+        <a href="{{ path('app_logout') }}">Déconnexion</a>
+    </nav>
+    <hr>
+
+    {% block body %}{% endblock %}
+</body>
+</html>

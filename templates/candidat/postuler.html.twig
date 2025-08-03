@@ -1,0 +1,609 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Postuler à l'offre - {{ offre.titre }}{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="Postulez à l'offre {{ offre.titre }} - Envoyez votre candidature avec lettre de motivation et CV">
+{% endblock %}
+
+
+
+
+
+{% block body %}
+<style>
+/* Styles pour la page de candidature */
+.application-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 2rem 0;
+    position: relative;
+}
+
+.application-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(59,130,246,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+    opacity: 0.5;
+}
+
+.application-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.application-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-custom::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: shimmer 4s infinite linear;
+}
+
+@keyframes shimmer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.header-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    opacity: 0.9;
+}
+
+.header-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.header-subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 0.5rem;
+    font-weight: 400;
+}
+
+.card-body-custom {
+    padding: 3rem 2.5rem;
+}
+
+.job-info {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.job-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.job-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.job-title::before {
+    content: '💼';
+    margin-right: 0.75rem;
+    font-size: 1.5rem;
+}
+
+.job-meta {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.job-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-group-enhanced {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-label-enhanced {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    display: block;
+    font-size: 0.95rem;
+}
+
+.form-control-enhanced {
+    background: rgba(248, 250, 252, 0.8);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form-control-enhanced:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-control-enhanced::placeholder {
+    color: #94a3b8;
+}
+
+.textarea-enhanced {
+    min-height: 150px;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.file-upload-container {
+    position: relative;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    background: rgba(248, 250, 252, 0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-upload-container:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.file-upload-container.dragover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    transform: scale(1.02);
+}
+
+.file-upload-icon {
+    font-size: 3rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.file-upload-text {
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.file-upload-hint {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.file-input-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.file-selected {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.file-selected-icon {
+    color: #10b981;
+    font-size: 1.25rem;
+}
+
+.file-selected-info {
+    flex: 1;
+}
+
+.file-selected-name {
+    font-weight: 500;
+    color: #064e3b;
+    margin-bottom: 0.25rem;
+}
+
+.file-selected-size {
+    font-size: 0.8rem;
+    color: #047857;
+}
+
+.btn-submit-enhanced {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1.25rem 2rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.btn-submit-enhanced:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.btn-submit-enhanced:active {
+    transform: translateY(0);
+}
+
+.btn-submit-enhanced:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-submit-enhanced.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@keyframes spin {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+.form-help-text {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    height: 2px;
+    background: #e2e8f0;
+    z-index: 1;
+}
+
+.progress-step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #64748b;
+    position: relative;
+    z-index: 2;
+}
+
+.progress-step.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.progress-step.completed {
+    background: #10b981;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .application-container {
+        padding: 1rem 0;
+    }
+    
+    .card-body-custom {
+        padding: 2rem 1.5rem;
+    }
+    
+    .card-header-custom {
+        padding: 2rem 1.5rem;
+    }
+    
+    .header-title {
+        font-size: 1.5rem;
+    }
+    
+    .job-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.form-control-enhanced:focus-visible,
+.btn-submit-enhanced:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+</style>
+<div class="application-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-10">
+                <div class="application-card">
+                    <div class="card-header-custom">
+                        <div class="header-icon">📋</div>
+                        <h1 class="header-title">Postuler à l'offre</h1>
+                        <p class="header-subtitle">Envoyez votre candidature en quelques clics</p>
+                    </div>
+                    
+                    <div class="card-body-custom">
+                        <!-- Étapes de progression -->
+                        <div class="progress-steps">
+                            <div class="progress-step completed">1</div>
+                            <div class="progress-step active">2</div>
+                            <div class="progress-step">3</div>
+                        </div>
+                        
+                        <!-- Informations sur l'offre -->
+                        <div class="job-info">
+                            <h2 class="job-title">{{ offre.titre }}</h2>
+                            
+                        </div>
+
+                        <!-- Formulaire de candidature -->
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'applicationForm'}}) }}
+                        
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <span>✍️</span>
+                                Lettre de motivation
+                            </h3>
+                            
+                            <div class="form-group-enhanced">
+                                {{ form_label(form.lettreMotivation, 'Votre lettre de motivation', {'label_attr': {'class': 'form-label-enhanced'}}) }}
+                                {{ form_widget(form.lettreMotivation, {
+                                    'attr': {
+                                        'class': 'form-control-enhanced textarea-enhanced',
+                                        'rows': '8',
+                                        'placeholder': 'Présentez-vous et expliquez votre motivation pour ce poste. Mettez en avant vos compétences et votre expérience pertinente...'
+                                    }
+                                }) }}
+                                <div class="form-help-text">
+                                    <span>💡</span>
+                                    Conseil : Personnalisez votre lettre selon l'offre et l'entreprise
+                                </div>
+                                {{ form_errors(form.lettreMotivation) }}
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <span>📄</span>
+                                Curriculum Vitae
+                            </h3>
+                            
+                            <div class="form-group-enhanced">
+                                {{ form_label(form.CV, 'Téléchargez votre CV', {'label_attr': {'class': 'form-label-enhanced'}}) }}
+                                
+                                <div class="file-upload-container" onclick="document.getElementById('{{ form.CV.vars.id }}').click()">
+                                    <div class="file-upload-icon">📎</div>
+                                    <div class="file-upload-text">Cliquez pour sélectionner votre CV</div>
+                                    <div class="file-upload-hint">Formats acceptés: PDF, DOC, DOCX (max. 5MB)</div>
+                                </div>
+                                
+                                {{ form_widget(form.CV, {
+                                    'attr': {
+                                        'class': 'file-input-hidden',
+                                        'accept': '.pdf,.doc,.docx'
+                                    }
+                                }) }}
+                                
+                                <div id="fileSelected" class="file-selected" style="display: none;">
+                                    <div class="file-selected-icon">✅</div>
+                                    <div class="file-selected-info">
+                                        <div class="file-selected-name" id="fileName"></div>
+                                        <div class="file-selected-size" id="fileSize"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-help-text">
+                                    <span>🔒</span>
+                                    Vos données personnelles sont protégées et sécurisées
+                                </div>
+                                {{ form_errors(form.CV) }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit-enhanced" id="submitBtn">
+                            <span>🚀</span>
+                            Envoyer ma candidature
+                        </button>
+                        
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('{{ form.CV.vars.id }}');
+    const fileSelected = document.getElementById('fileSelected');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const uploadContainer = document.querySelector('.file-upload-container');
+    const form = document.getElementById('applicationForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Gestion du upload de fichier
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileSelected.style.display = 'flex';
+            uploadContainer.style.display = 'none';
+        }
+    });
+    
+    // Drag & Drop
+    uploadContainer.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadContainer.classList.add('dragover');
+    });
+    
+    uploadContainer.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadContainer.classList.remove('dragover');
+    });
+    
+    uploadContainer.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadContainer.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+    
+    // Gestion de la soumission du formulaire
+    form.addEventListener('submit', function(e) {
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳</span> Envoi en cours...';
+    });
+    
+    // Fonction utilitaire pour formater la taille du fichier
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Validation en temps réel de la lettre de motivation
+    const lettreMotivation = document.getElementById('{{ form.lettreMotivation.vars.id }}');
+    lettreMotivation.addEventListener('input', function() {
+        const wordCount = this.value.trim().split(/\s+/).length;
+        const minWords = 50;
+        
+        if (this.value.trim() === '') {
+            this.style.borderColor = '#e2e8f0';
+        } else if (wordCount < minWords) {
+            this.style.borderColor = '#f59e0b';
+        } else {
+            this.style.borderColor = '#10b981';
+        }
+    });
+});
+</script>
+{% endblock %}

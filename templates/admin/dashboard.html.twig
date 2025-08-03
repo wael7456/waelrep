@@ -1,0 +1,71 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Tableau de bord RH</h1>
+
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Offres publiées</h5>
+                    <p class="card-text fs-4">{{ nb_offres }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Candidats inscrits</h5>
+                    <p class="card-text fs-4">{{ nb_users }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Candidatures</h5>
+                    <p class="card-text fs-4">{{ nb_postulations }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Liste des postulations</h3>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Candidat</th>
+                <th>Offre</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th>CV</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for postulation in postulations %}
+                <tr>
+                    <td>{{ postulation.candidat.email }}</td>
+                    <td>{{ postulation.offre.titre }}</td>
+                    <td>{{ postulation.statut }}</td>
+                    <td>{{ postulation.datePostulation|date('d/m/Y') }}</td>
+                    <td>
+                    {% if postulation.cv %}
+<a href="{{ asset('uploads/cv/' ~ postulation.cv) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+    Voir CV
+</a>
+                    {% else %}
+                        <span class="text-muted">Aucun CV</span>
+                    {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucune postulation disponible.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

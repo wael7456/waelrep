@@ -1,0 +1,195 @@
+.registration-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.registration-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 450px;
+    width: 100%;
+}
+
+.registration-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 35px 60px rgba(0, 0, 0, 0.15);
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-custom::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.header-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    opacity: 0.9;
+}
+
+.header-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.card-body-custom {
+    padding: 2.5rem;
+}
+
+.form-group-custom {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-control-custom {
+    background: rgba(248, 250, 252, 0.8);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-control-custom:focus {
+    outline: none;
+    border-color: #4f46e5;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-control-custom::placeholder {
+    color: #94a3b8;
+}
+
+.form-label-custom {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-size: 0.9rem;
+}
+
+.form-check-custom {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(248, 250, 252, 0.5);
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.form-check-input-custom {
+    margin-right: 0.75rem;
+    transform: scale(1.2);
+}
+
+.form-check-label-custom {
+    color: #374151;
+    font-size: 0.9rem;
+    margin: 0;
+    cursor: pointer;
+}
+
+.btn-register {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.btn-register:active {
+    transform: translateY(0);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.login-link a {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.login-link a:hover {
+    color: #7c3aed;
+    text-decoration: underline;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    z-index: 1;
+}
+
+.form-control-with-icon {
+    padding-left: 3rem;
+}
+
+@media (max-width: 768px) {
+    .registration-container {
+        padding: 1rem;
+    }
+    
+    .card-body-custom {
+        padding: 1.5rem;
+    }
+    
+    .card-header-custom {
+        padding: 1.5rem;
+    }
+}
