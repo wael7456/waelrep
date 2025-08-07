@@ -1,0 +1,63 @@
+---
+- name: Déploiement de l'application Symfony avec Docker
+  hosts: remote
+  become: true
+
+  vars:
+    docker_image: "awedni100/symfony-recrute:latest"
+    container_name: "symfony-app"
+    app_port: 80
+    host_port: 8080
+
+  tasks:
+
+    - name: Installer les dépendances (Debian/Ubuntu)
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Ajouter la clé GPG officielle de Docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Ajouter le dépôt Docker
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Installer Docker
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+
+    - name: S'assurer que Docker est lancé
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Supprimer le conteneur existant (s'il existe)
+      docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: true
+
+    - name: Récupérer l'image depuis Docker Hub
+      docker_image:
+        name: "{{ docker_image }}"
+        source: pull
+
+    - name: Lancer le conteneur
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ docker_image }}"
+        ports:
+          - "{{ host_port }}:{{ app_port }}"
+        restart_policy: always
