@@ -34,5 +34,14 @@ pipeline {
                 sh 'docker push ${DOCKER_IMAGE}'
             }
         }
+        stage('Deploy with Ansible') {
+
+           steps {
+
+            echo '🚀 Déploiement via Ansible...'
+            sh 'ansible-playbook -i hosts.ini deploy.yml'
+            }
+        }
+
     }
 }
