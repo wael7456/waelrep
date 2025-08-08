@@ -37,12 +37,15 @@ pipeline {
         stage('Deploy with Ansible') {
     steps {
         echo '🚀 Déploiement via Ansible...'
-        sh '''
-            export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i hosts.ini deploy.yml
-        '''
+        withCredentials([sshUserPrivateKey(credentialsId: 'vagrant-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+            sh '''
+                export ANSIBLE_HOST_KEY_CHECKING=False
+                ansible-playbook -i hosts.ini deploy.yml --private-key=$SSH_KEY
+            '''
+        }
     }
 }
+
 
 
     }
