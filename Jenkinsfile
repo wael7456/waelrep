@@ -35,13 +35,15 @@ pipeline {
             }
         }
         stage('Deploy with Ansible') {
+    steps {
+        echo '🚀 Déploiement via Ansible...'
+        sh '''
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook -i hosts.ini deploy.yml
+        '''
+    }
+}
 
-           steps {
-
-            echo '🚀 Déploiement via Ansible...'
-            sh 'ansible-playbook -i hosts.ini deploy.yml'
-            }
-        }
 
     }
 }
