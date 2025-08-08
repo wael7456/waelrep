@@ -7,7 +7,7 @@
     docker_image: "awedni100/symfony-recrute:latest"
     container_name: "symfony-app"
     app_port: 80
-    host_port: 8080
+    host_port: 8083
 
   tasks:
 
