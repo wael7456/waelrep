@@ -7,6 +7,8 @@ COPY src/ src/
 COPY config/ config/
 COPY public/ public/
 COPY bin/ bin/
+COPY templates/ templates/
+
 COPY .env* ./
 RUN composer dump-autoload --optimize --classmap-authoritative \
     && find /app/vendor -name "*.md" -delete \
