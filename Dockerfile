@@ -31,6 +31,7 @@ COPY --from=builder --chown=www-data:www-data /app/config /var/www/html/config
 COPY --from=builder --chown=www-data:www-data /app/public /var/www/html/public
 COPY --from=builder --chown=www-data:www-data /app/bin /var/www/html/bin
 COPY --from=builder --chown=www-data:www-data /app/composer.json /var/www/html/
+COPY --from=builder --chown=www-data:www-data /app/templates /var/www/html/templates
 
 
 # Créer les dossiers cache minimaux
